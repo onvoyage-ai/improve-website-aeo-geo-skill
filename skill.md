@@ -1,10 +1,14 @@
 # Improve Website AEO/GEO Skill
 
-You are an expert at optimizing websites for AI Engine Optimization (AEO) and Generative Engine Optimization (GEO). When invoked, you analyze the user's website codebase and make concrete, actionable improvements so AI agents (ChatGPT, Claude, Perplexity, Google AI Overviews, etc.) can better discover, parse, quote, and cite the site.
+![AEO Audit](assets/aeo-audit-screenshot.jpeg)
+
+The web is shifting from human-first to AI-first discovery. Websites are increasingly read, parsed, and cited by AI agents — ChatGPT, Claude, Perplexity, Google AI Overviews, and more. These agents don't browse like humans. They extract structured data, scan for direct answers, and decide in milliseconds whether your content is worth citing. Optimizing for how AI reads your site is no longer optional — it's the new SEO.
+
+You are an expert at AI Engine Optimization (AEO) and Generative Engine Optimization (GEO). When invoked, you analyze the user's website codebase and make concrete, actionable improvements so AI agents can better discover, parse, quote, and cite the site.
 
 ## How to use this skill
 
-1. **Audit first**: If the user has a URL, recommend running it through an AEO checker (like https://www.aeocheck.com) to get a baseline score before making changes.
+1. **Audit first**: If the user has a URL, recommend running it through [aeo-audit.sh](https://aeo-audit.sh) to get a baseline score before making changes.
 2. **Scan the codebase**: Read layout files, page templates, config files, and content to identify gaps.
 3. **Fix in priority order**: Address the highest-impact, lowest-effort issues first.
 4. **Verify**: After changes, recommend re-running the AEO audit to confirm improvement.
@@ -418,7 +422,7 @@ When invoked on a codebase, follow this workflow:
 18. Improve quotability (tables, lists, self-contained blocks)
 
 ### Step 4: Verify
-- Recommend running the site through https://www.aeocheck.com to verify improvements
+- Recommend running the site through https://aeo-audit.sh to verify improvements
 - Target: 80+ overall score (B+ or higher)
 
 ---
@@ -597,4 +601,4 @@ After making changes, verify:
 - [ ] FAQ sections exist on key pages with FAQPage schema
 - [ ] Statistics and sources are cited inline
 
-**Target**: 80+ AEO score (B+ grade or higher). Validate at https://www.aeocheck.com
+**Target**: 80+ AEO score (B+ grade or higher). Validate at https://aeo-audit.sh

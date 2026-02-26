@@ -1,6 +1,10 @@
 # Improve Website AEO/GEO Skill
 
-A Claude Code skill that analyzes and improves websites for AI Engine Optimization (AEO) and Generative Engine Optimization (GEO).
+[![AEO Audit](assets/aeo-audit-screenshot.jpeg)](https://aeo-audit.sh/)
+
+The web is changing. Websites are no longer read only by humans — AI agents like ChatGPT, Claude, Perplexity, and Google AI Overviews are now the primary way millions of people discover and consume information. If your site isn't optimized for how AI reads, parses, and cites content, you're invisible to a growing share of your audience.
+
+**Check your score at [aeo-audit.sh](https://aeo-audit.sh/)** — then use this skill to improve it.
 
 ## What it does
 
@@ -33,7 +37,7 @@ Or reference it contextually:
 
 ## Companion Tool
 
-This skill works best alongside [AEO Check](https://www.aeocheck.com) — run an audit before and after to measure your score improvement.
+This skill works best alongside [AEO Audit](https://aeo-audit.sh/) — run an audit before and after to measure your score improvement.
 
 ## Scoring Methodology
 
