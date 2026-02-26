@@ -1,43 +1,54 @@
 # Improve Website AEO/GEO Skill
 
-![AEO Audit](assets/aeo-audit-screenshot.jpeg)
+You are an expert at AI Engine Optimization (AEO) and Generative Engine Optimization (GEO). When invoked, you analyze the user's website codebase and make concrete, actionable code changes so AI agents — ChatGPT, Claude, Perplexity, Google AI Overviews, and others — can better discover, parse, quote, and cite the site.
 
-The web is shifting from human-first to AI-first discovery. Websites are increasingly read, parsed, and cited by AI agents — ChatGPT, Claude, Perplexity, Google AI Overviews, and more. These agents don't browse like humans. They extract structured data, scan for direct answers, and decide in milliseconds whether your content is worth citing. Optimizing for how AI reads your site is no longer optional — it's the new SEO.
+The web is shifting from human-first to AI-first discovery. AI agents don't browse like humans. They extract structured data, scan for direct answers, and decide in milliseconds whether content is worth citing. This skill makes websites visible to that new audience.
 
-You are an expert at AI Engine Optimization (AEO) and Generative Engine Optimization (GEO). When invoked, you analyze the user's website codebase and make concrete, actionable improvements so AI agents can better discover, parse, quote, and cite the site.
+## Workflow
 
-## How to use this skill
+When invoked on a codebase, follow this exact sequence:
 
-1. **Audit first**: If the user has a URL, recommend running it through [aeo-audit.sh](https://aeo-audit.sh) to get a baseline score before making changes.
-2. **Scan the codebase**: Read layout files, page templates, config files, and content to identify gaps.
-3. **Fix in priority order**: Address the highest-impact, lowest-effort issues first.
-4. **Verify**: After changes, recommend re-running the AEO audit to confirm improvement.
+### Step 1: Baseline
+- If the user has a live URL, recommend running it through [aeo-audit.sh](https://aeo-audit.sh) first to get a score.
+- If no URL is available, proceed with a code-level audit.
+
+### Step 2: Discover the stack
+- Identify the framework (Next.js, Nuxt, Astro, SvelteKit, Remix, WordPress, Hugo, Jekyll, 11ty, plain HTML)
+- Find where `<head>` is managed (layout files, document components, plugins, theme files)
+- Find where content lives (pages, MDX/MD files, CMS templates, components, PHP templates)
+- Check for existing SEO plugins/packages (next-seo, @astrojs/sitemap, Yoast, etc.)
+- Check if the site uses SSR, SSG, or client-side rendering
+
+### Step 3: Audit existing state
+Run through all checks below. For each failing check, note the file(s) to modify and the specific fix.
+
+### Step 4: Fix in priority order
+Apply changes starting with Priority 1 (blockers), then work down. Make the smallest, most targeted changes needed.
+
+### Step 5: Verify
+- Recommend re-running the audit at [aeo-audit.sh](https://aeo-audit.sh)
+- Target: 80+ overall score (B+ grade or higher)
 
 ---
 
-## Scoring Model Overview
+## Scoring Model
 
-AEO scores combine two halves:
+The AEO audit score combines two halves:
 
-- **Foundational Score (50%)** — 16 deterministic, crawl-based checks (pass/fail per page, aggregated site-wide at 80% threshold)
-- **Intelligence Score (50%)** — 6 LLM-evaluated dimensions measuring how well content serves AI agents
+- **Foundational Score (50%)** — 16 deterministic checks, pass/fail per page, aggregated site-wide (80%+ pages must pass)
+- **Intelligence Score (50%)** — 6 LLM-evaluated content quality dimensions (0-5 scale)
 
-**Final Score** = 50% Foundational + 50% Intelligence, mapped to letter grades (A+ = 95-100 ... F = below 40).
+**Final Score** = 50% Foundational + 50% Intelligence → letter grade (A+ = 95-100, A = 90-94, B+ = 80-84, ..., F = below 40).
 
 ---
 
-## Part 1: Foundational Checks (16 checks, 134 total points)
+## Priority 1: Blockers (fix these first)
 
-Fix these in priority order. Each check passes per-page; site-wide pass requires 80%+ of pages passing.
+### AI Bot Access (12 pts)
 
-### 1.1 AI Bot Access (12 pts) — CRITICAL
+robots.txt must NOT block these 9 AI crawlers: `GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, `OAI-SearchBot`, `anthropic-ai`, `ChatGPT-User`, `Bytespider`, `CCBot`.
 
-**What**: robots.txt must NOT block these 9 AI crawlers: `GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, `OAI-SearchBot`, `anthropic-ai`, `ChatGPT-User`, `Bytespider`, `CCBot`.
-
-**How to fix**:
-- Open `robots.txt` (usually at project root or `public/robots.txt`)
-- Remove any `Disallow` rules targeting these bots
-- If no robots.txt exists, create one that explicitly allows them:
+**Fix**: Open `robots.txt` (project root, `public/robots.txt`, or framework equivalent). Remove any `Disallow` rules for these bots. If no robots.txt exists, create one:
 
 ```txt
 User-agent: *
@@ -73,71 +84,48 @@ Allow: /
 Sitemap: https://YOURDOMAIN.com/sitemap.xml
 ```
 
-**Why**: If AI bots are blocked, nothing else matters. This is the #1 prerequisite.
+If AI bots are blocked, nothing else matters. This is the #1 prerequisite.
 
-### 1.2 Text Depth (12 pts) — HIGH IMPACT
+### AI-Accessible Meta Tags (6 pts)
 
-**What**: Each page needs 250+ words of readable body text (excluding nav, footer, boilerplate).
+Pages must NOT have `nosnippet`, `noai`, or `noimageai` in robots meta tags or `X-Robots-Tag` headers. Search for these and remove from public content pages.
 
-**How to fix**:
-- Identify thin pages (landing pages, product pages with only images/CTAs)
-- Add substantive content: explain what the product/service does, who it's for, how it works
-- For component-based sites (React, Vue, Next.js), check that content is server-rendered or statically generated, not client-only
-- Aim for 500-2000 words on key pages; 250 is the minimum
+### Indexability (10 pts)
 
-**Why**: AI agents need explicit text to extract answers. Thin pages get ignored.
+Pages must NOT have `<meta name="robots" content="noindex">` on public-facing pages. Search codebase for `noindex` and remove where inappropriate.
 
-### 1.3 Clear Page Title (10 pts)
+---
 
-**What**: Every page `<title>` must be 10+ characters.
+## Priority 2: High-Impact Structure
 
-**How to fix**:
-- Check layout/head components for dynamic title generation
-- Ensure each page sets a unique, descriptive title (not just the site name)
-- Format: `[Page Topic] | [Brand]` or `[Page Topic] - [Brand]`
-- Aim for 50-60 characters for optimal display
+### Structured Data / JSON-LD (8 pts)
 
-**In Next.js**: Use `metadata` export or `generateMetadata()` in each page/layout.
-**In plain HTML**: Set `<title>` in each page's `<head>`.
+Every page needs at least 1 `<script type="application/ld+json">` block. Recognized `@type` values (8 additional pts): `Organization`, `WebSite`, `WebPage`, `Article`, `Product`, `FAQPage`, `BreadcrumbList`, `LocalBusiness`, `Person`, `Event`, `HowTo`, `Recipe`, `VideoObject`, `SoftwareApplication`.
 
-### 1.4 Meta Description (10 pts)
+Minimum setup:
+- **Site-wide**: Organization schema in the root layout
+- **Homepage**: WebSite schema with SearchAction
+- **Blog posts**: Article schema with author, datePublished, dateModified
+- **Product pages**: Product schema
+- **FAQ sections**: FAQPage schema
 
-**What**: Each page needs a `<meta name="description">` with 50+ characters.
+### Page Titles (10 pts)
 
-**How to fix**:
-- Write unique descriptions for each page (120-160 characters ideal)
-- Lead with the most important information — this is what AI agents read first
-- Include the primary topic/question the page answers
-- Avoid generic descriptions like "Welcome to our website"
+Every `<title>` must be 10+ characters. Each page needs a unique, descriptive title. Format: `[Page Topic] | [Brand]`. Aim for 50-60 characters.
 
-### 1.5 Internal Linking (10 pts)
+### Meta Descriptions (10 pts)
 
-**What**: Each page needs 5+ internal links.
+Every page needs `<meta name="description">` with 50+ characters. Write unique descriptions (120-160 chars ideal). Lead with the answer/value, not filler.
 
-**How to fix**:
-- Add contextual links within body content to related pages
-- Include navigation links (breadcrumbs, related articles, "see also" sections)
-- For blog posts: add related posts section
-- For product pages: link to docs, FAQs, comparison pages
-- Ensure links use descriptive anchor text (not "click here")
+### Text Depth (12 pts)
 
-**Why**: Internal links build the content graph that AI agents traverse to understand site structure.
+Each page needs 250+ words of readable body text (excluding nav, footer, boilerplate). Aim for 500-2000 words on key pages. Articles over 2,900 words average 5.1 AI citations vs. 3.2 for under 800 words (SE Ranking, 2025 — 2.3M pages analyzed).
 
-### 1.6 Indexability (10 pts)
+For SPA/component sites: ensure content is server-rendered or statically generated.
 
-**What**: Pages must NOT have `<meta name="robots" content="noindex">`.
+### llms.txt (10 pts)
 
-**How to fix**:
-- Search codebase for `noindex` — remove it from any public-facing pages
-- Only use noindex on genuinely private pages (admin panels, user dashboards)
-- Check framework-level config (e.g., Next.js `robots` metadata property)
-
-### 1.7 llms.txt (10 pts)
-
-**What**: A valid `/.well-known/llms.txt` file with a heading, links, and 100+ characters.
-
-**How to fix**:
-Create `public/.well-known/llms.txt` (or equivalent static path):
+Create `/.well-known/llms.txt` with a heading, links, and 100+ characters:
 
 ```markdown
 # [Your Site Name]
@@ -158,303 +146,159 @@ Create `public/.well-known/llms.txt` (or equivalent static path):
 - [Privacy Policy](https://yourdomain.com/privacy)
 ```
 
-**Why**: `llms.txt` is an emerging standard that gives AI agents a curated index of your most important content and usage policies.
+Also consider creating `llms-full.txt` with the complete content of key pages inlined for direct LLM consumption.
 
-### 1.8 Structured Data / JSON-LD (8 pts)
+---
 
-**What**: Each page needs at least 1 `<script type="application/ld+json">` block.
+## Priority 3: Content Quality
 
-**How to fix**:
-- Add Organization schema to the homepage/layout:
+### Heading Hierarchy (6 pts)
 
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Your Company",
-  "url": "https://yourdomain.com",
-  "logo": "https://yourdomain.com/logo.png",
-  "description": "What your company does",
-  "sameAs": [
-    "https://twitter.com/yourhandle",
-    "https://linkedin.com/company/yourcompany"
-  ]
-}
-```
+Proper H1 → H2 → H3 nesting. Exactly 1 `<h1>` per page (8 pts). 2+ heading levels. No skips (H1 → H3 without H2 is wrong). Use 120-180 words between headings — this range gets 70% more ChatGPT citations than shorter sections (SE Ranking, 2025).
 
-- Add WebSite schema with SearchAction to the homepage
-- Add Article schema to blog posts (with author, datePublished, dateModified)
-- Add Product schema to product pages
-- Add FAQPage schema to FAQ sections
-- Add BreadcrumbList schema to pages with breadcrumbs
+### Internal Linking (10 pts)
 
-### 1.9 Schema Types (8 pts)
+5+ internal links per page. Use descriptive anchor text. Add: breadcrumbs, related posts, "see also" sections, contextual inline links.
 
-**What**: JSON-LD must use recognized `@type` values from this list: `Organization`, `WebSite`, `WebPage`, `Article`, `Product`, `FAQPage`, `BreadcrumbList`, `LocalBusiness`, `Person`, `Event`, `HowTo`, `Recipe`, `VideoObject`, `SoftwareApplication`.
+### Canonical URL (8 pts)
 
-**How to fix**: Use appropriate types for each page context. Most sites need at minimum: `Organization` (site-wide) + `WebSite` (homepage) + `Article` (blog) or `Product` (products).
+Every page needs `<link rel="canonical" href="...">` with an absolute URL. Handle trailing slashes consistently.
 
-### 1.10 Canonical URL (8 pts)
+### Open Graph (8 pts)
 
-**What**: Each page needs `<link rel="canonical" href="...">`.
+Every page needs `og:title` and `og:description`. Also add `og:image`, `og:url`, `og:type`.
 
-**How to fix**:
-- Add to the `<head>` of every page, pointing to the preferred URL
-- In Next.js: set `alternates.canonical` in metadata
-- Ensure canonical URLs are absolute (include protocol and domain)
-- Handle trailing slashes consistently
+### Image Alt Coverage (8 pts)
 
-### 1.11 Single H1 Heading (8 pts)
+80%+ of `<img>` tags must have `alt` attributes. Use descriptive text. Decorative images: `alt=""`.
 
-**What**: Each page must have exactly 1 `<h1>` tag.
+### RSS/Atom Feed (8 pts)
 
-**How to fix**:
-- Search for `<h1>` or `<H1>` across templates — ensure only one per page
-- The H1 should describe the page's primary topic
-- Common mistake: logo in header wrapped in H1 + content H1 = two H1s
-
-### 1.12 Open Graph Tags (8 pts)
-
-**What**: Each page needs both `og:title` and `og:description` meta tags.
-
-**How to fix**:
-```html
-<meta property="og:title" content="Page Title" />
-<meta property="og:description" content="Page description for social sharing" />
-<meta property="og:image" content="https://yourdomain.com/og-image.jpg" />
-<meta property="og:url" content="https://yourdomain.com/page" />
-<meta property="og:type" content="website" />
-```
-
-In Next.js: use `openGraph` property in metadata export.
-
-### 1.13 Image Alt Coverage (8 pts)
-
-**What**: 80%+ of `<img>` tags must have `alt` attributes.
-
-**How to fix**:
-- Search codebase for `<img` tags missing `alt`
-- Add descriptive alt text (not "image1.jpg" or empty strings for meaningful images)
-- Decorative images can use `alt=""` (empty but present)
-
-### 1.14 RSS/Atom Feed (8 pts)
-
-**What**: A detectable RSS or Atom feed via `<link>` tag or standard paths.
-
-**How to fix**:
-- Add feed generation (many frameworks have plugins/packages for this)
-- Add discovery link in `<head>`:
+Publish a feed and add the discovery link:
 ```html
 <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml" />
 ```
-- Standard paths to serve feed: `/feed.xml`, `/rss.xml`, `/feed`, `/atom.xml`
 
-**Why**: RSS feeds help AI agents discover and track new/updated content.
+### Sitemap with lastmod
 
-### 1.15 Heading Hierarchy (6 pts)
-
-**What**: Proper H1 → H2 → H3 structure with 2+ unique heading levels and no level skips (e.g., H1 → H3 with no H2).
-
-**How to fix**:
-- Audit heading usage in templates — ensure logical nesting
-- Use H2 for main sections, H3 for sub-sections under each H2
-- Never skip levels (H1 → H3 is wrong; use H1 → H2 → H3)
-- Don't use headings purely for styling — use CSS instead
-
-### 1.16 AI-Accessible Meta Tags (6 pts)
-
-**What**: Pages must NOT have restrictive meta tags: `nosnippet`, `noai`, `noimageai`.
-
-**How to fix**:
-- Search for these directives in meta tags and `X-Robots-Tag` headers
-- Remove them from public content pages
-- Only use these on genuinely private/restricted content
+Not scored directly but critical for freshness signals. Generate `sitemap.xml` with `<lastmod>` dates. Reference it from robots.txt.
 
 ---
 
-## Part 2: Intelligence Dimensions (6 dimensions, LLM-evaluated 0-5 scale)
+## Priority 4: GEO Content Optimization
 
-These measure content quality as perceived by AI agents. Each dimension scores 0-5, converted to 0-100, then averaged.
+These strategies are backed by peer-reviewed research from the GEO paper (Aggarwal et al., KDD 2024 — Princeton, Georgia Tech, IIT Delhi, Allen AI) and large-scale industry studies.
 
-### 2.1 Answer Readiness
+### Add Quotations from Authoritative Sources (+41% visibility)
 
-**Goal**: AI agents can find direct answers in opening paragraphs.
+The single most effective GEO strategy. Include direct quotes from experts, studies, or official sources. This is the #1 optimization per the GEO paper.
 
-**How to improve**:
-- **Lead with definitions**: Start pages/sections with a clear, direct answer to the implied question
-- **Use FAQ sections**: Add `<details>`/`<summary>` or dedicated FAQ blocks with common questions
-- **Answer-first paragraphs**: Don't bury the answer after 3 paragraphs of context. Put the answer in the first 1-2 sentences, then elaborate
-- **Use question-format headings**: "What is [X]?", "How does [Y] work?" — these match how users ask AI agents
-- **Add FAQ schema**: Wrap FAQ sections in `FAQPage` JSON-LD for double benefit
-
-**Research**: Content answering questions in opening paragraphs gets 4.8x more AI citations.
-
-**Example transformation**:
 ```
-BEFORE: "Our company was founded in 2015 with a vision to transform..."
-AFTER:  "[Product] is a [category] tool that [primary function]. It helps [audience] [key benefit]."
+WEAK: "Experts say this approach works well."
+STRONG: "As Dr. Jane Smith, Harvard's head of AI research, noted: 'This approach reduces error rates by 40% in production systems.'"
 ```
 
-### 2.2 Quotability
+### Add Statistics and Data Points (+33% visibility)
 
-**Goal**: Clean, self-contained 40-60 word passages that AI can extract and cite.
+The #2 GEO strategy. Include specific numbers, percentages, dates, and measurements. Every 150-200 words should contain at least one data point.
 
-**How to improve**:
-- **Comparison tables**: Use HTML `<table>` elements comparing features, plans, or options
-- **Numbered/bulleted lists**: Break processes into scannable steps
-- **Definition blocks**: "X is Y that does Z" — one sentence that stands alone
-- **Key stat callouts**: Bold or highlight key numbers/findings
-- **Avoid wall-of-text**: Break paragraphs at 3-4 sentences max
-- **Self-contained paragraphs**: Each paragraph should make sense if extracted in isolation
+```
+WEAK: "Our platform is significantly faster."
+STRONG: "Our platform processes 10,000 requests per second with a median latency of 12ms, based on benchmarks run in January 2025."
+```
 
-**Research**: Comparison tables get 2.8x more citations; FAQ blocks get +156%.
+### Cite Sources with In-Text References (+28% visibility)
 
-### 2.3 Evidence Density
+The #3 GEO strategy. Name sources inline. Link to studies, reports, and official documentation.
 
-**Goal**: Statistics, data points, named sources, and in-text citations throughout.
+```
+WEAK: "Studies show this is effective."
+STRONG: "According to a 2024 McKinsey report, companies adopting this approach saw 35% higher revenue growth."
+```
 
-**How to improve**:
-- **Add specific numbers**: "reduces load time by 40%" not "significantly faster"
-- **Name your sources**: "According to [Source Name]..." or "A 2024 [Org] study found..."
-- **Include dates**: "As of January 2025..." or "Updated March 2025"
-- **Link to sources**: Inline links to studies, reports, official docs
-- **Use data in headings**: "5 Ways to..." or "How We Reduced Costs by 30%"
-- **Author attribution**: Add author names and credentials to blog posts and articles
+**Key finding**: Lower-ranked sites benefit the most — sites originally ranked 4th-5th saw up to +115% visibility improvement from citing sources (GEO paper, KDD 2024).
 
-**Research**: In-text citations = +115% AI visibility; statistics = +40% citation rate.
+### Answer-First Content Structure
 
-### 2.4 Content Depth
+44.2% of ChatGPT citations come from the first 30% of page content (Kevin Indig, Growth Memo, 2026 — 1.2M AI answers analyzed). Lead every section with the direct answer:
 
-**Goal**: Enough substantive content to thoroughly answer questions.
+```
+[H2: Question-format heading]
+[1-2 sentence direct answer]
+[Supporting detail with evidence]
+[Statistic or source citation]
+[Internal link to related content]
+```
 
-**How to improve**:
-- **Cover sub-topics**: Don't just explain what — cover why, how, when, who, and alternatives
-- **Add examples**: Real-world use cases, code samples, case studies
-- **Include data**: Charts, statistics, benchmarks
-- **Long-form key pages**: Aim for 1500-2000+ words on cornerstone content
-- **Multiple content formats**: Mix prose, lists, tables, code blocks, images with captions
-- **Address objections**: "What about [concern]?" sections show thoroughness
+**Before**: "Our company was founded in 2015 with a vision to transform..."
+**After**: "[Product] is a [category] tool that [primary function]. It helps [audience] achieve [specific outcome], reducing [metric] by [X]%."
 
-**Research**: Long-form content (2000+ words) gets 3x more citations; data-rich guides outperform opinion 3.4x.
+### FAQ Sections
 
-### 2.5 Freshness
+Pages with FAQ sections average 4.9 AI citations vs. 4.4 without (SE Ranking, 2025 — 2.3M pages). The FAQ *content* matters more than FAQ schema markup. Add both:
 
-**Goal**: Content appears current enough for AI agents to confidently cite.
+```html
+<section>
+  <h2>Frequently Asked Questions</h2>
+  <h3>What is [topic]?</h3>
+  <p>[Direct answer]. [Supporting detail with evidence].</p>
+  <h3>How does [topic] work?</h3>
+  <p>[Step-by-step explanation].</p>
+</section>
+```
 
-**How to improve**:
-- **Add date metadata**: `article:published_time` and `article:modified_time` meta tags
-- **Show "Last updated" dates**: Visible on the page, not just in metadata
-- **Reference current year**: Mention current dates, recent events, latest versions
-- **Maintain a blog/changelog**: Regular updates signal an active site
-- **RSS feed**: Enables AI agents to track content freshness
-- **Sitemap with lastmod**: Include `<lastmod>` dates in your XML sitemap
+Plus FAQPage JSON-LD schema for the section.
 
-**Research**: 76% of ChatGPT's most-cited pages were updated in the last 30 days.
+### Quotable Blocks
 
-**In code**:
+Write self-contained paragraphs that make sense when extracted in isolation:
+- 40-60 words per block
+- No pronouns referring to prior context ("it", "this")
+- Name the subject explicitly
+- End with a concrete fact or number
+- Use comparison tables, numbered lists, and definition blocks
+
+### Freshness Signals
+
+AI agents cite fresher content. Content updated within 3 months averages 6 citations vs. 3.9 for 2+ year old content (SE Ranking, 2025). AI assistants cite content 25.7% fresher than traditional organic search results (Ahrefs, 2025 — 17M citations analyzed).
+
+Add to every content page:
 ```html
 <meta property="article:published_time" content="2025-01-15T00:00:00Z" />
 <meta property="article:modified_time" content="2025-06-01T00:00:00Z" />
-<meta name="last-modified" content="2025-06-01" />
 ```
 
-### 2.6 Structural Clarity
+Show "Last updated: [date]" visibly on the page. Maintain a blog or changelog with regular updates.
 
-**Goal**: Clean, semantic HTML that AI agents can parse into a logical outline.
+### Structural Clarity
 
-**How to improve**:
-- **Semantic HTML**: Use `<main>`, `<article>`, `<section>`, `<nav>`, `<aside>`, `<header>`, `<footer>`
-- **Clean heading outline**: H1 → H2 → H3 should read like a table of contents
-- **Separate content from chrome**: Navigation, ads, and boilerplate should be in semantic containers so AI can skip them
-- **Minimal JS dependency**: Ensure critical content is in the HTML, not loaded via JS
-- **Server-side rendering**: Use SSR/SSG for content pages so crawlers see the full content
-- **Remove noise**: Hide cookie banners, modals, and popups from the content flow using semantic markup
-
-**Research**: Clean heading hierarchy = 3.2x more citations vs unstructured content.
+Use semantic HTML: `<main>`, `<article>`, `<section>`, `<nav>`, `<aside>`. Content with clear H2/H3 hierarchy is 2.8x more likely to earn citations (AirOps, 2025). Ensure critical content is in the HTML (SSR/SSG), not loaded via client-side JS.
 
 ---
 
-## Part 3: Implementation Playbook
-
-When invoked on a codebase, follow this workflow:
-
-### Step 1: Discover the tech stack
-- Identify the framework (Next.js, Nuxt, Astro, plain HTML, WordPress, etc.)
-- Find where `<head>` is managed (layout files, document components, plugins)
-- Find where content lives (pages, MDX files, CMS templates, components)
-- Check for existing SEO plugins/packages
-
-### Step 2: Audit existing state
-- Check robots.txt for AI bot blocks
-- Search for existing JSON-LD structured data
-- Check meta tag patterns (title, description, OG, canonical)
-- Look for heading hierarchy issues
-- Check for llms.txt
-- Check for RSS feed setup
-- Look for noindex/nosnippet/noai directives
-
-### Step 3: Fix in priority order
-
-**Priority 1 — Blockers (fix these first)**:
-1. Unblock AI bots in robots.txt
-2. Remove restrictive AI meta tags (nosnippet, noai, noimageai)
-3. Fix noindex on public pages
-
-**Priority 2 — High Impact Structure**:
-4. Add/fix JSON-LD structured data (Organization + page-specific types)
-5. Fix titles and meta descriptions
-6. Ensure content depth (250+ words per page)
-7. Create llms.txt
-
-**Priority 3 — Content Quality**:
-8. Improve heading hierarchy (H1 → H2 → H3)
-9. Add internal links (5+ per page)
-10. Add Open Graph tags
-11. Fix image alt text coverage
-12. Set up RSS feed
-13. Add canonical URLs
-
-**Priority 4 — Intelligence Improvements**:
-14. Restructure content for answer-readiness (answer-first paragraphs)
-15. Add FAQ sections with FAQPage schema
-16. Increase evidence density (statistics, sources, dates)
-17. Add publication/modification dates
-18. Improve quotability (tables, lists, self-contained blocks)
-
-### Step 4: Verify
-- Recommend running the site through https://aeo-audit.sh to verify improvements
-- Target: 80+ overall score (B+ or higher)
-
----
-
-## Part 4: Framework-Specific Patterns
+## Framework-Specific Patterns
 
 ### Next.js (App Router)
 
-**Metadata in layout.ts/page.ts**:
+**Metadata** (`app/page.tsx` or `app/layout.tsx`):
 ```typescript
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Page Title | Brand',
   description: 'Descriptive meta description of 120-160 characters.',
-  alternates: {
-    canonical: 'https://yourdomain.com/page',
-  },
+  alternates: { canonical: 'https://yourdomain.com/page' },
   openGraph: {
     title: 'Page Title',
-    description: 'Description for social sharing.',
+    description: 'Social sharing description.',
     url: 'https://yourdomain.com/page',
     images: [{ url: 'https://yourdomain.com/og-image.jpg' }],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 }
 ```
 
-**JSON-LD in page component**:
+**JSON-LD**:
 ```tsx
 export default function Page() {
   const jsonLd = {
@@ -465,26 +309,18 @@ export default function Page() {
     dateModified: '2025-06-01',
     author: { '@type': 'Person', name: 'Author Name' },
   }
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <article>
-        <h1>Article Title</h1>
-        {/* Content */}
-      </article>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <article><h1>Article Title</h1>{/* Content */}</article>
     </>
   )
 }
 ```
 
-**robots.txt** (in `public/robots.txt` or via `app/robots.ts`):
+**robots.txt** (`app/robots.ts`):
 ```typescript
 import type { MetadataRoute } from 'next'
-
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
@@ -499,12 +335,80 @@ export default function robots(): MetadataRoute.Robots {
 }
 ```
 
+**Sitemap** (`app/sitemap.ts`):
+```typescript
+import type { MetadataRoute } from 'next'
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    { url: 'https://yourdomain.com', lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+    { url: 'https://yourdomain.com/about', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+  ]
+}
+```
+
+### Nuxt 3
+
+**Metadata** (in `app.vue` or page components):
+```vue
+<script setup>
+useSeoMeta({
+  title: 'Page Title | Brand',
+  description: 'Descriptive meta description.',
+  ogTitle: 'Page Title',
+  ogDescription: 'Social sharing description.',
+  ogImage: 'https://yourdomain.com/og-image.jpg',
+})
+useHead({
+  link: [{ rel: 'canonical', href: 'https://yourdomain.com/page' }],
+})
+</script>
+```
+
+**JSON-LD** (using `useSchemaOrg` from `nuxt-schema-org`):
+```vue
+<script setup>
+useSchemaOrg([
+  defineArticle({
+    headline: 'Article Title',
+    datePublished: '2025-01-15',
+    dateModified: '2025-06-01',
+    author: { name: 'Author Name' },
+  }),
+])
+</script>
+```
+
+### SvelteKit
+
+**Metadata** (in `+page.svelte` or `+layout.svelte`):
+```svelte
+<svelte:head>
+  <title>Page Title | Brand</title>
+  <meta name="description" content="Descriptive meta description." />
+  <link rel="canonical" href="https://yourdomain.com/page" />
+  <meta property="og:title" content="Page Title" />
+  <meta property="og:description" content="Social sharing description." />
+</svelte:head>
+```
+
+**JSON-LD**:
+```svelte
+<svelte:head>
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Article Title",
+    "datePublished": "2025-01-15"
+  })}</script>`}
+</svelte:head>
+```
+
 ### Astro
 
-**Metadata via `<head>` in layout**:
+**Layout** (`src/layouts/Base.astro`):
 ```astro
 ---
-const { title, description, canonical } = Astro.props
+const { title, description, canonical, publishedDate } = Astro.props
 ---
 <head>
   <title>{title}</title>
@@ -512,93 +416,129 @@ const { title, description, canonical } = Astro.props
   <link rel="canonical" href={canonical} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
+  {publishedDate && <meta property="article:published_time" content={publishedDate} />}
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/feed.xml" />
 </head>
 ```
 
-### Plain HTML / Static Sites
+Use `@astrojs/sitemap` for automatic sitemap generation with lastmod.
 
-Apply all tags directly in each page's `<head>`. Consider a build step or templating engine to avoid duplication.
+### WordPress
 
----
-
-## Part 5: Content Writing Guidelines for AEO
-
-When creating or editing content, follow these principles:
-
-### Answer-First Structure
-```
-[H2: Question-format heading]
-[1-2 sentence direct answer]
-[Supporting detail paragraph]
-[Evidence: statistic, source, or example]
-[Internal link to related content]
-```
-
-### Quotable Block Pattern
-Write paragraphs that can stand alone when extracted:
-- 40-60 words
-- No pronouns referring to previous paragraphs ("it", "this", "they")
-- Include the subject/topic name explicitly
-- End with a concrete fact or number
-
-### Evidence Pattern
-Every 150-200 words, include one of:
-- A specific statistic with source
-- A named reference or citation
-- A concrete example with details
-- A date or timeframe
-
-### FAQ Section Pattern
-```html
-<section>
-  <h2>Frequently Asked Questions</h2>
-
-  <h3>What is [topic]?</h3>
-  <p>[Direct answer in 1-2 sentences. Elaboration with specific details.]</p>
-
-  <h3>How does [topic] work?</h3>
-  <p>[Step-by-step explanation or clear process description.]</p>
-
-  <!-- Add FAQPage JSON-LD schema for this section -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is [topic]?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "[Direct answer]"
-        }
-      }
-    ]
+**functions.php** — Add JSON-LD:
+```php
+function add_json_ld_schema() {
+  if (is_singular('post')) {
+    $schema = [
+      '@context' => 'https://schema.org',
+      '@type' => 'Article',
+      'headline' => get_the_title(),
+      'datePublished' => get_the_date('c'),
+      'dateModified' => get_the_modified_date('c'),
+      'author' => ['@type' => 'Person', 'name' => get_the_author()],
+    ];
+    echo '<script type="application/ld+json">' . json_encode($schema) . '</script>';
   }
-  </script>
-</section>
+}
+add_action('wp_head', 'add_json_ld_schema');
+```
+
+**robots.txt** — WordPress manages via Settings > Reading. Add AI bot rules via a plugin (Yoast, Rank Math) or a custom `robots.txt` in the web root.
+
+**llms.txt** — Create `.well-known/llms.txt` in the WordPress root directory, or use a plugin/rewrite rule.
+
+### Hugo
+
+**Metadata** (in `layouts/partials/head.html`):
+```html
+<title>{{ .Title }} | {{ .Site.Title }}</title>
+<meta name="description" content="{{ .Description }}" />
+<link rel="canonical" href="{{ .Permalink }}" />
+<meta property="og:title" content="{{ .Title }}" />
+<meta property="og:description" content="{{ .Description }}" />
+{{ if .Date }}<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+{{ if .Lastmod }}<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" />{{ end }}
+```
+
+**JSON-LD** (in `layouts/partials/schema.html`):
+```html
+{{ if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ .Title }}",
+  "datePublished": "{{ .Date.Format "2006-01-02" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02" }}",
+  "author": { "@type": "Person", "name": "{{ .Params.author | default .Site.Params.author }}" }
+}
+</script>
+{{ end }}
+```
+
+Hugo generates RSS at `/index.xml` by default. Use `hugo --minify` for clean HTML output.
+
+### Jekyll / 11ty
+
+**Jekyll** — Use `jekyll-seo-tag` and `jekyll-sitemap` gems. Add JSON-LD in `_includes/head.html`. RSS via `jekyll-feed` gem.
+
+**11ty** — Use `@11ty/eleventy-plugin-rss` for feeds. Add metadata via Nunjucks/Liquid templates in `_includes/base.njk`. Generate sitemap with a custom template or `eleventy-plugin-sitemap`.
+
+### Remix
+
+**Metadata** (in route `meta` function):
+```typescript
+export const meta: MetaFunction = () => [
+  { title: 'Page Title | Brand' },
+  { name: 'description', content: 'Descriptive meta description.' },
+  { property: 'og:title', content: 'Page Title' },
+  { property: 'og:description', content: 'Social sharing description.' },
+  { tagName: 'link', rel: 'canonical', href: 'https://yourdomain.com/page' },
+]
 ```
 
 ---
 
-## Part 6: Verification Checklist
+## Verification Checklist
 
-After making changes, verify:
+After making changes, confirm:
 
-- [ ] `robots.txt` allows all 9 AI bots
-- [ ] No `noindex`, `nosnippet`, `noai` on public pages
+- [ ] robots.txt allows all 9 AI bots
+- [ ] No noindex, nosnippet, noai on public pages
 - [ ] Every page has: title (10+ chars), meta description (50+ chars), canonical URL
-- [ ] Every page has: exactly 1 H1, proper heading hierarchy
+- [ ] Every page has: exactly 1 H1, proper heading hierarchy (H1 → H2 → H3)
 - [ ] Every page has: JSON-LD with recognized @type
 - [ ] Every page has: og:title + og:description
 - [ ] Every page has: 250+ words of body content
 - [ ] Every page has: 5+ internal links
 - [ ] 80%+ images have alt text
 - [ ] `/.well-known/llms.txt` exists and is valid
-- [ ] RSS/Atom feed exists and is discoverable
-- [ ] Publication/modification dates are present on content pages
+- [ ] RSS/Atom feed exists and is discoverable via `<link>` tag
+- [ ] Sitemap.xml exists with `<lastmod>` dates
+- [ ] Publication/modification dates on content pages (meta + visible)
 - [ ] Content leads with direct answers, not preamble
-- [ ] FAQ sections exist on key pages with FAQPage schema
-- [ ] Statistics and sources are cited inline
+- [ ] FAQ sections on key pages with FAQPage schema
+- [ ] Statistics and named sources cited inline
+- [ ] Authoritative quotations included where relevant
 
-**Target**: 80+ AEO score (B+ grade or higher). Validate at https://aeo-audit.sh
+**Target**: 80+ AEO score (B+ grade or higher). Validate at [aeo-audit.sh](https://aeo-audit.sh).
+
+---
+
+## Research References
+
+All statistics in this skill are from verifiable, peer-reviewed or large-scale primary research:
+
+| Claim | Source |
+|---|---|
+| Quotations = +41% visibility; Statistics = +33%; Cite Sources = +28% | Aggarwal et al., "GEO: Generative Engine Optimization," KDD 2024 ([arXiv](https://arxiv.org/abs/2311.09735)) |
+| Lower-ranked sites gain up to +115% from GEO optimization | Same GEO paper — sites ranked 4th-5th saw largest gains |
+| 44.2% of ChatGPT citations from first 30% of content | Kevin Indig, Growth Memo, Feb 2026 — 1.2M AI answers, 18K citations |
+| Articles 2,900+ words = 5.1 citations vs. 3.2 for <800 words | SE Ranking, Nov 2025 — 2.3M pages, 295K domains |
+| 120-180 words per section = 70% more ChatGPT citations | Same SE Ranking study |
+| FAQ sections = 4.9 citations vs. 4.4 without | Same SE Ranking study |
+| Content updated within 3 months = 6 citations vs. 3.9 for 2+ year old | Same SE Ranking study |
+| AI cites content 25.7% fresher than organic search | Ahrefs, 2025 — 17M citations across 7 AI platforms |
+| H2/H3 hierarchy = 2.8x more likely to earn citations | AirOps, 2025 |
+| 85% of AI Overview citations from last 2 years | Seer Interactive, 2025 |
+| ChatGPT drives 87.4% of AI referral traffic | Conductor, Nov 2025 — 13.7K domains, 3.3B sessions |
