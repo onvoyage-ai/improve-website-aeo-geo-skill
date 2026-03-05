@@ -47,6 +47,19 @@ curl -o ~/.claude/skills/geo-content-research/skill.md \
 
 ---
 
+### [Create GEO/SEO Charts & Data Visualizations](create-geo-charts/)
+Create data visualizations that AI engines can parse, quote, and cite. Every chart comes with a full text layer — summary, HTML data table, CSV, and Dataset JSON-LD — because AI engines cite text, not pixels.
+
+```bash
+mkdir -p ~/.claude/skills/create-geo-charts
+curl -o ~/.claude/skills/create-geo-charts/skill.md \
+  https://raw.githubusercontent.com/onvoyage-ai/gtm-engineer-skills/main/create-geo-charts/skill.md
+```
+
+**What it does**: Generates comparison charts, benchmark tables, flowcharts, and more with all 9 required components: takeaway heading, key finding summary, chart, source line, interpretation, HTML data table, downloadable CSV, Dataset JSON-LD, and optimized image metadata.
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute new skills, improve existing ones, or add examples.

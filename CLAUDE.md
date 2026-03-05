@@ -53,6 +53,16 @@ Key principles:
 - Every statistic must have a source URL — no estimates or fabrications
 - Planning Mode and Writing Mode are distinct phases — don't conflate them
 
+### `create-geo-charts/`
+Creates data visualizations (charts, graphs, tables) optimized for GEO and SEO. Every chart comes with a full text layer (summary, HTML data table, CSV, Dataset JSON-LD) so AI engines can parse, quote, and cite the data. Supports SVG, Mermaid, and Chart.js output.
+
+Key principles:
+- `skill.md` is an agent prompt — keep it actionable, not explanatory
+- AI engines cite text, not pixels — every chart must have a complete text representation
+- Every number needs a verifiable source URL — no fabricated data
+- Deliver all 9 components per chart: heading, summary, chart, source line, interpretation, HTML table, CSV, JSON-LD, image metadata
+- Use consistent design system (colors, legend, citation footer) across all charts
+
 ## Adding a New Skill
 
 1. Create a new directory: `<verb>-<noun>/` (e.g., `audit-landing-page/`)
