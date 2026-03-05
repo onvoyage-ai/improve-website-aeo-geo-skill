@@ -280,6 +280,35 @@ For the chart image file itself:
 
 ---
 
+## Step 9: Visual QA — Render and Verify Before Delivery
+
+**After generating any chart, you MUST open it in a browser and visually inspect it before delivering to the user.** SVG coordinate math is error-prone — elements frequently overflow, overlap, or clip.
+
+### QA process
+1. Save the chart as an HTML file
+2. Open it in the browser (use `open` command)
+3. Check for these common SVG issues:
+
+| Issue | What to Look For |
+|---|---|
+| **Text overflow** | Labels or callout boxes extending past the SVG viewBox edge — especially right-side text, long annotations, and regional/legend callouts |
+| **Text clipping** | Data labels cut off at top of chart (y too small) or bottom (below baseline) |
+| **Overlap** | Bar labels overlapping each other, especially in horizontal bars with many rows |
+| **Misalignment** | Data labels not centered over their bars/points |
+| **Axis mismatch** | Data values that don't align with the axis scale visually |
+| **Readability** | Text too small at rendered size, low contrast against background |
+
+### Safe SVG layout rules
+- **Right margin**: Keep all elements at least 20px inside the right edge of the viewBox
+- **Top margin**: Data labels above bars need at least 20px from the top of the viewBox
+- **Long text**: If a callout or annotation exceeds ~200px width, break it to multiple `<tspan>` lines or shorten it
+- **ViewBox sizing**: Set the viewBox width to 680px and height to accommodate all content with 20px padding on all sides. Adjust height rather than cramming elements.
+
+### If you find issues
+Fix them immediately — adjust coordinates, shorten text, break lines, or expand the viewBox. Then re-open and verify the fix. Do NOT deliver a chart you haven't visually confirmed.
+
+---
+
 ## Integration with Other Skills
 
 This skill is designed to work alongside the **write-seo-blog** and **geo-content-research** skills.
@@ -361,3 +390,4 @@ Before delivering any chart, verify:
 - [ ] Color is not the only way meaning is conveyed
 - [ ] No fabricated data — every number has a verifiable source
 - [ ] Internal links planned: chart ↔ related content pages
+- [ ] **VISUAL QA PASSED**: Chart opened in browser, verified no text overflow, clipping, overlap, or misalignment. All elements have 20px+ margin from viewBox edges.
