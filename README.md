@@ -60,6 +60,19 @@ curl -o ~/.claude/skills/create-geo-charts/skill.md \
 
 ---
 
+### [Research SEO/GEO Keywords](research-keywords/)
+Research and deliver a prioritized keyword list for SEO and GEO — using web search and AI analysis instead of paid tools like Ahrefs or Semrush.
+
+```bash
+mkdir -p ~/.claude/skills/research-keywords
+curl -o ~/.claude/skills/research-keywords/skill.md \
+  https://raw.githubusercontent.com/onvoyage-ai/gtm-engineer-skills/main/research-keywords/skill.md
+```
+
+**What it does**: 4-phase interactive process — brand intelligence → keyword discovery (6 methods) → clustering & GEO scoring → structured deliverable. Outputs a prioritized keyword file with topic clusters, GEO opportunity scores, quick wins, and competitor gaps.
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute new skills, improve existing ones, or add examples.

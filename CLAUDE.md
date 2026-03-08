@@ -63,6 +63,17 @@ Key principles:
 - Deliver all 9 components per chart: heading, summary, chart, source line, interpretation, HTML table, CSV, JSON-LD, image metadata
 - Use consistent design system (colors, legend, citation footer) across all charts
 
+### `research-keywords/`
+Researches and delivers a prioritized keyword list for SEO and GEO using web search and AI analysis — no paid tools required. 4-phase interactive skill: brand intelligence → keyword discovery (6 methods) → clustering & scoring → structured deliverable.
+
+Key principles:
+- `skill.md` is an agent prompt — keep it actionable, not explanatory
+- No paid tools required — all research uses web search, website crawling, and AI analysis
+- No fabricated search volumes — use qualitative signals (autocomplete, PAA, AI Overview presence) as proxies
+- GEO is a first-class scoring dimension alongside relevance and business value
+- Interactive: get user confirmation before moving between phases
+- Output feeds directly into write-seo-blog, geo-content-research, and create-geo-charts skills
+
 ## Adding a New Skill
 
 1. Create a new directory: `<verb>-<noun>/` (e.g., `audit-landing-page/`)
