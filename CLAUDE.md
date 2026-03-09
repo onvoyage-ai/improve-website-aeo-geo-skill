@@ -35,14 +35,18 @@ Scoring model aligned with AEO Audit (aeo-audit.sh):
 - Final = 0-100, mapped to letter grades (A+ = 95-100 ... F = below 40)
 
 ### `geo-content-research/`
-Reverse-engineers how AI engines evaluate a product category, then generates AI-ready content to earn brand citations in ChatGPT, Gemini, and Perplexity. 5-phase interactive skill: product intelligence → AI algorithm research → content blueprint → content generation → authority infiltration plan.
+Reverse-engineers how AI engines evaluate a product category, then generates AI-ready content to earn brand citations in ChatGPT, Gemini, and Perplexity. 6-phase interactive skill: product intelligence → AI prompt research → GEO prompt target table → content blueprint → content generation → authority infiltration plan.
 
 Key principles:
 - `skill.md` is an agent prompt — keep it actionable, not explanatory
-- Interactive: the skill asks questions and waits for answers at each phase
+- **Primary deliverable is the GEO Prompt Target Table** — a prioritized list of exact queries people ask AI chatbots, sorted by business value tier (Buy → Solve → Learn) then by priority (Easy Win / Target)
+- Every prompt must have a clear path to the brand being mentioned in the AI answer — no generic educational content without a brand hook
+- GEO prompts are full natural-language questions (5-15+ words), NOT short SEO keywords
+- Good tier distribution: ~20% Buy, ~40% Solve, ~40% Learn — too many Learn prompts means writing encyclopedia entries, not earning recommendations
 - Research must complete before any content is generated
 - Every content page must have all 5 AI-ready zones (Direct Answer, Comparison Table, Data Section, Scenario Solutions, FAQ)
 - Structured data (Product, FAQPage, HowTo, ClaimReview) generated for every page
+- Interactive: the skill asks questions and waits for answers at each phase
 
 ### `write-seo-blog/`
 Writes product-led SEO blog articles. Two modes: Planning (topic ideation) and Writing (full article production). Requires pre-writing research completion before writing. Applies 8-part article framework, E-E-A-T signals, and strict no-fabricated-stats policy.
