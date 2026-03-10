@@ -316,7 +316,7 @@ Tell the user:
 1. Where the file was saved
 2. Top easy wins to start with and why
 3. Suggest next steps:
-   - Use **write-seo-blog** to write articles for the top clusters
+   - Use **write-seo-geo-content** to write pages for the top clusters
    - Use **geo-content-research** to build full AI-ready content pages for high-GEO keywords
    - Use **create-geo-charts** for data-driven keywords that need visualizations
    - If they haven't validated with Ahrefs/Semrush yet: "Want to paste these into Ahrefs to get real volume data? I'll re-filter based on the CSV."

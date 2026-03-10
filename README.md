@@ -21,13 +21,13 @@ curl -o ~/.claude/skills/improve-aeo-geo/skill.md \
 
 ---
 
-### [Write SEO Blog Article](write-seo-blog/)
-Write product-led SEO blog articles that rank and convert. Follows a research-then-write methodology with an 8-part article framework, full E-E-A-T optimization, and a no-fabricated-stats policy.
+### [Write SEO + GEO Content](write-seo-geo-content/)
+Write product-led pages that rank in search engines and get cited by AI engines. Follows a research-then-write methodology with page-type frameworks, GEO prompt coverage, and a no-fabricated-stats policy.
 
 ```bash
-mkdir -p ~/.claude/skills/write-seo-blog
-curl -o ~/.claude/skills/write-seo-blog/skill.md \
-  https://raw.githubusercontent.com/onvoyage-ai/gtm-engineer-skills/main/write-seo-blog/skill.md
+mkdir -p ~/.claude/skills/write-seo-geo-content
+curl -o ~/.claude/skills/write-seo-geo-content/skill.md \
+  https://raw.githubusercontent.com/onvoyage-ai/gtm-engineer-skills/main/write-seo-geo-content/skill.md
 ```
 
 **What it does**: Operates in Planning Mode (topic ideation) or Writing Mode (full article production). Completes pre-writing research before writing a single word.

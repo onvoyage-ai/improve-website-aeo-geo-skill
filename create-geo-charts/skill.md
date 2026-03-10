@@ -311,9 +311,9 @@ Fix them immediately — adjust coordinates, shorten text, break lines, or expan
 
 ## Integration with Other Skills
 
-This skill is designed to work alongside the **write-seo-blog** and **geo-content-research** skills.
+This skill is designed to work alongside the **write-seo-geo-content** and **geo-content-research** skills.
 
-### When called from write-seo-blog
+### When called from write-seo-geo-content
 The blog writer may request charts for Part 3 (problem statistics) or Part 4 (solution comparison). When creating charts for a blog post:
 - Match the article's heading hierarchy — use `<h3>` for the chart's action title (not `<h2>`, which is reserved for article sections)
 - Keep the chart inline within the article flow — don't create a separate page

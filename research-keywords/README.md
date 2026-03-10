@@ -81,7 +81,7 @@ Outputs a structured Markdown file with:
 ## Works With Other Skills
 
 The keyword deliverable feeds directly into:
-- **[write-seo-blog](../write-seo-blog/)** — write articles for top keyword clusters
+- **[write-seo-geo-content](../write-seo-geo-content/)** — write pages for top keyword and prompt clusters
 - **[geo-content-research](../geo-content-research/)** — build full AI-ready content for high-GEO keywords
 - **[create-geo-charts](../create-geo-charts/)** — create data visualizations for data-driven keywords
 
