@@ -17,7 +17,7 @@ curl -o ~/.claude/skills/improve-aeo-geo/skill.md \
 
 **What it does**: Detects your framework, audits 16 foundational checks + 6 GEO content quality dimensions, makes targeted code changes, and targets an 80+ AEO score (B+ grade or higher).
 
-**Check your score first**: [aeo-audit.sh](https://aeo-audit.sh/)
+**Get your free AEO/GEO website score in minutes**: [aeo-audit.sh](https://aeo-audit.sh/)
 
 ---
 
